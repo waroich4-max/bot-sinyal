@@ -1,53 +1,29 @@
-!pip install requests beautifulsoup4
-
-import time
 import requests
 from bs4 import BeautifulSoup
 
-# --- MASUKKAN DATA ANDA DI SINI ---
-TOKEN_BOT = "8395690959:AAERNZNTgaGULV7D2m3R8RO_al9DI621FU4"      
-CHAT_ID = "8770086104"          
+TOKEN = "7953259837:AAFYc8E8s2k1_72n0fO-lB6mN8t3J68iY_Y"
+CHAT_ID = "6124806548"
 
-URL_TARGET = "https://tradingpoin.com/id/chart?pair=CRYIDX.B&val=Z-CRY%252FIDX&source=Binomo&description=CRYPTO+%2F+IDX&timeframe=60"
-
-def send_telegram(text):
-    url = f"https://api.telegram.org/bot{TOKEN_BOT}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
+def send_telegram(message):
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+    payload = {"chat_id": CHAT_ID, "text": message, "parse_mode": "HTML"}
     try:
-        requests.post(url, json=payload)
+        requests.post(url, data=payload, timeout=10)
     except Exception as e:
-        print(f"Gagal mengirim pesan: {e}")
+        print(f"Error kirim Telegram: {e}")
 
-print("Bot pemantau sinyal sedang berjalan...")
-send_telegram("🤖 *Bot Pemantau Sinyal Tradingpoin Diaktifkan!*")
-
-last_signal = ""
-
-while True:
+def check_signal():
+    url = "https://tradingpoin.com/id/chart?pair=CRYIDX.B&val=Z-CRY%252FIDX&source=Binomo&description=CRYPTO+%2F+IDX&timeframe=60"
+    headers = {'User-Agent': 'Mozilla/5.0'}
     try:
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        response = requests.get(URL_TARGET, headers=headers, timeout=10)
-        
+        response = requests.get(url, headers=headers, timeout=10)
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
-            text_content = soup.get_text()
-
-            # Cek jika ada sinyal NAIK
-            if "NAIK" in text_content and last_signal != "NAIK":
-                msg = "📢 *SINYAL CRYPTO / IDX*\n\n🟢 **Arah:** NAIK (BUY)\n⏳ **Eksekusi:** 1-2 detik sebelum pergantian candle"
-                send_telegram(msg)
-                last_signal = "NAIK"
-                print("Sinyal NAIK terdeteksi dan dikirim!")
-                
-            # Cek jika ada sinyal TURUN
-            elif "TURUN" in text_content and last_signal != "TURUN":
-                msg = "📢 *SINYAL CRYPTO / IDX*\n\n🔴 **Arah:** TURUN (SELL)\n⏳ **Eksekusi:** 1-2 detik sebelum pergantian candle"
-                send_telegram(msg)
-                last_signal = "TURUN"
-                print("Sinyal TURUN terdeteksi dan dikirim!")
-
+            print("Berhasil mengecek sinyal...")
+        else:
+            print(f"Gagal akses web: {response.status_code}")
     except Exception as e:
-        print(f"Terjadi kesalahan: {e}")
-        
-    # Cek setiap 10 detik
-    time.sleep(10)
+        print(f"Error scraping: {e}")
+
+if __name__ == "__main__":
+    check_signal()
