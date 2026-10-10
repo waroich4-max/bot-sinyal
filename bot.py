@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 TOKEN = "8395690959:AAERNZNTgaGULV7D2m3R8R0_al9DI621FU4"
+
 CHAT_ID = "8770086104"
 
 def check_signal():
