@@ -20,6 +20,8 @@ def check_signal():
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             print("Berhasil mengecek sinyal...")
+send_telegram("🚀 <b>Bot Sinyal CRYIDX.B Berhasil Mengecek Pasar!</b>")
+
         else:
             print(f"Gagal akses web: {response.status_code}")
     except Exception as e:
