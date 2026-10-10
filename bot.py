@@ -8,7 +8,8 @@ def send_telegram(message):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": message, "parse_mode": "HTML"}
     try:
-        requests.post(url, data=payload, timeout=10)
+        res = requests.post(url, data=payload, timeout=10)
+        print(f"Respon Telegram: {res.status_code}")
     except Exception as e:
         print(f"Error kirim Telegram: {e}")
 
@@ -20,8 +21,7 @@ def check_signal():
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
             print("Berhasil mengecek sinyal...")
-send_telegram("🚀 <b>Bot Sinyal CRYIDX.B Berhasil Mengecek Pasar!</b>")
-
+            send_telegram("🚀 <b>Bot Sinyal CRYIDX.B Berhasil Mengecek Pasar!</b>")
         else:
             print(f"Gagal akses web: {response.status_code}")
     except Exception as e:
