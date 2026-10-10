@@ -1,15 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
 
-TOKEN = "7953259837:AAFYc8E8s2k1_72n0fO-lB6mN8t3J68iY_Y"
-CHAT_ID = "6124806548"
+TOKEN = "8395690959:AAERNZNTgaGULV7D2m3R8R0_al9DI621FU4"
+CHAT_ID = "8770086104"
 
 def send_telegram(message):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": message, "parse_mode": "HTML"}
     try:
         res = requests.post(url, data=payload, timeout=10)
-        print(f"Respon Telegram: {res.status_code}")
+        print(f"Respon Telegram: {res.status_code} - {res.text}")
     except Exception as e:
         print(f"Error kirim Telegram: {e}")
 
@@ -29,4 +29,3 @@ def check_signal():
 
 if __name__ == "__main__":
     check_signal()
-
